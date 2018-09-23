@@ -1,5 +1,6 @@
 package com.example.daniel.attendance4;
 
+import android.content.Intent;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
@@ -10,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 
 import java.nio.charset.Charset;
 
@@ -18,13 +20,28 @@ public class NFC extends AppCompatActivity {
     NfcManager manager;
     NfcAdapter adapter;
     NdefMessage message;
+    private Button button1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nfc);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        adapter = manager.getDefaultAdapter();
+        button1 = (Button) findViewById(R.id.button1);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openNFC2();
+            }
+        });
+        try
+        {
+            adapter = NfcAdapter.getDefaultAdapter(this);
+        }
+        catch (Error e)
+        {
+
+        }
         //user = new NdefRecord();
         //mail = new NdefRecord(new byte[2]);
         String[] data = {"walker", "vincent"};
@@ -32,14 +49,12 @@ public class NFC extends AppCompatActivity {
         adapter.setNdefPushMessage(message, this);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
+    }
+
+    public void openNFC2(){
+        Intent intent = new Intent(this, NFC_Receiver.class);
+        startActivity(intent);
     }
 
     public NdefRecord[] createRecords(String[] messages) {
